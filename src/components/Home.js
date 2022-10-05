@@ -1,9 +1,13 @@
-import Sidebar from "./Layout/Sidebar";
-import Collections from "./Collections";
 
-const Home =  () => {
+import {Outlet} from "react-router-dom";
+
+const Home = () => {
+
     return <>
-        <Sidebar/>
+        {/*<Sidebar/>*/}
+        <div className="col-sm-10">
+            <Outlet/>
+        </div>
     </>
 }
 

@@ -4,6 +4,8 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.css';
+import './assets/css/sb-admin-2.min.css';
+
 import {BrowserRouter} from "react-router-dom";
 
 const rootElement = document.getElementById("root");

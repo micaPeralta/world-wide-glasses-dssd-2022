@@ -4,9 +4,9 @@ import {Navigate} from "react-router-dom";
 
 
 export const RequireOauth = ({children}) => {
-    const  auth = useAuth()
+    const auth = useAuth()
 
-    if (!auth.user) {
+    if (!auth?.user) {
         return <Navigate to={"/"} />
     }
 
