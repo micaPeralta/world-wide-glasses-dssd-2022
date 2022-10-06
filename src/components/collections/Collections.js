@@ -1,29 +1,30 @@
 import {BsPlusLg} from "react-icons/bs";
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
-
+import httpHandler from "react-http-client";
 
 const Collections = () => {
 
     const navigate = useNavigate();
-    const [collections, setCollections] = useState([{
-        id: 1,
-        name: "a name",
-        field: "field"
-    }])
+    const [collections, setCollections] = useState([])
 
     useEffect(() => {
         getCollections()
     }, [])
 
-    const getCollections = () => {
-         const path = "https://localhost:7224/api/Collection/1"
 
-        fetch(path).then(response => {
-            console.log(response)
-            },
-            (response)=> {
-             console.log("ERROR" , response)
+
+    const getCollections = async () => {
+        const path = "http://localhost:5224/api/Collection/getAll"
+
+        fetch(path)
+            .then(response =>  response.clone().json())
+            .then((data) => {
+                console.log(data)
+                setCollections(data)
+            })
+            .catch((response) => {
+                console.log("ERROR", response)
             }
         )
     }
@@ -55,17 +56,21 @@ const Collections = () => {
                         <thead>
                         <tr>
                             <th>Name</th>
-                            <th>Position</th>
-                            <th>Office</th>
+                            <th>Description</th>
+                            <th>Manufacturing Time</th>
+                            <th>Release Date </th>
+                            <th>Models </th>
                         </tr>
                         </thead>
                         <tbody>
                         {collections.map(c => {
                             return (
                                 <tr key={c.id}>
-                                    <td>{c.id}</td>
                                     <td>{c.name}</td>
-                                    <td>{c.field}</td>
+                                    <td>{c.description}</td>
+                                    <td>{c.manufacturingTime}</td>
+                                    <td>{new Date(c.releaseDate).toDateString()}</td>
+                                    <td>{c.models}</td>
                                 </tr>
                             )
                         })}

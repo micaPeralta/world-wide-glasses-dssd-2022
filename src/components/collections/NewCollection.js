@@ -1,50 +1,44 @@
 import Input from "../UI/Input";
 import {useRef} from "react";
+import {NavLink, useNavigate} from "react-router-dom";
 
 const NewCollection = () => {
+    const navigate = useNavigate();
+
     const nameRef = useRef("")
-    const descriptionRef = useRef()
+    const descriptionRef = useRef("")
     const imagesRef = useRef("")
-    const releaseDateRef = useRef()
-    const manufacturingTimeRef = useRef()
+    const releaseDateRef = useRef(undefined)
+    const manufacturingTimeRef = useRef(undefined)
     const modelRef = useRef()
 
     const handleCreateCollection = async (e) => {
         e.preventDefault()
-        // let collection = {
-        //     name: nameRef.current.value,
-        //     description: descriptionRef.current.value,
-        //     images: imagesRef.current.value,
-        //     releaseDate: releaseDateRef.current.value,
-        //     model: modelRef.current.value,
-        //     manufacturingTime: manufacturingTimeRef.current.value
-        // }
-
         let collection = {
             name: nameRef.current.value,
             description: descriptionRef.current.value,
-            plazoFabricacion: manufacturingTimeRef.current.value,
-            fechaLanzamientoEstimada: releaseDateRef.current.value,
-            nombreDeModelos: [],
-            tipoDeModelos: []
+            images: imagesRef.current.value,
+            releaseDate: new Date(releaseDateRef.current.value).toISOString(),
+            models: [],
+            manufacturingTime: manufacturingTimeRef.current.value
         }
 
-        const path = "https://localhost:7224/api/Collection"
-        let response = await fetch(path,{
+
+        const path = "http://localhost:5224/api/Collection"
+        fetch(path, {
             method: 'POST',
-            body: collection,
+            body: JSON.stringify(collection),
             headers: {
                 'Content-Type': 'application/json',
             }
+        }).then(response => {
+            console.log(response.ok)
+            if (response.ok){
+                navigate("/home/collections")
+            }
+        }).catch((response) => {
+                console.log("ERROR", response)
         })
-
-        console.log(response)
-        // ).then(response => {
-        //     console.log(response)
-        // }).catch( response => {
-        //     console.log(response)
-        // })
-
 
     }
 
@@ -52,6 +46,7 @@ const NewCollection = () => {
         <>
             <h1 className="h3 mb-2 text-gray-800">Schedule a new collection</h1>
 
+            <NavLink to={"/home/collections"}> {"<back"}</NavLink>
             <div className="col-sm-6 pt-2">
                 <form onSubmit={handleCreateCollection}>
                     <div className="form-group">
