@@ -1,6 +1,7 @@
 import Input from "../UI/Input";
 import {useRef, useState} from "react";
 import {NavLink, useNavigate} from "react-router-dom";
+import {BsXLg} from "react-icons/bs";
 
 const NewCollection = () => {
     const navigate = useNavigate();
@@ -58,6 +59,11 @@ const NewCollection = () => {
         setModels([...models,model])
     }
 
+    const handleDeleteModel = (name) => {
+        let modelVar = models.filter(m => m.name != name)
+        setModels(modelVar)
+    }
+
     return (
         <>
             <nav  aria-label="breadcrumb">
@@ -91,12 +97,17 @@ const NewCollection = () => {
                     </div>
 
 
+                    <label htmlFor=""> Models</label>
+
                     <div className="card">
                         <div className="card-body">
                             {models.length > 0 &&
                                 <div className="alert alert-warning" role="alert">
                                 {models.map(m =>{
-                                    return <span className="badge bg-secondary m-1 p-1">{m.name }({m.modelType})</span>
+                                    return <span className="badge bg-secondary m-1 p-1">
+                                        {m.name }({m.modelType})
+                                        <BsXLg onClick={() => handleDeleteModel(m.name)}/>
+                                    </span>
                                 })}
                                 </div>}
                             <div className="form-group">
