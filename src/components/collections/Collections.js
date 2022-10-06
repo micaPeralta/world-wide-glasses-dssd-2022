@@ -70,7 +70,14 @@ const Collections = () => {
                                     <td>{c.description}</td>
                                     <td>{c.manufacturingTime}</td>
                                     <td>{new Date(c.releaseDate).toDateString()}</td>
-                                    <td>{c.models}</td>
+                                    <td>
+                                        {c.models.length > 0 &&
+                                            <div className="alert alert-warning" role="alert">
+                                                {c.models.map(m =>{
+                                                    return <span className="badge bg-secondary m-1 p-1">{m.name }({m.modelType})</span>
+                                                })}
+                                            </div>}
+                                    </td>
                                 </tr>
                             )
                         })}
