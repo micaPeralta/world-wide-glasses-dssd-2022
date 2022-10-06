@@ -1,16 +1,32 @@
 import {BsPlusLg} from "react-icons/bs";
-import {NavLink, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
+import {useEffect, useState} from "react";
 
 
 const Collections = () => {
 
     const navigate = useNavigate();
-
-    const collections = [{
+    const [collections, setCollections] = useState([{
         id: 1,
         name: "a name",
         field: "field"
-    }]
+    }])
+
+    useEffect(() => {
+        getCollections()
+    }, [])
+
+    const getCollections = () => {
+         const path = "https://localhost:7224/api/Collection/1"
+
+        fetch(path).then(response => {
+            console.log(response)
+            },
+            (response)=> {
+             console.log("ERROR" , response)
+            }
+        )
+    }
 
     const goToNewCollection = () => {
         navigate("../new-collection", {replace: true})

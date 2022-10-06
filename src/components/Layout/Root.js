@@ -6,9 +6,10 @@ import {useAuth} from "../../context/AuthContext";
 import {Route, Routes} from "react-router-dom";
 import {RequireOauth} from "../../helpers/RequireOauth";
 import Home from "../Home";
-import Collections from "../Collections";
+import Collections from "../collections/Collections";
 import NotFound from "../NotFound";
-import NewCollection from "../NewCollection";
+import NewCollection from "../collections/NewCollection";
+import App from "../../App";
 
 
 const Root = () => {
