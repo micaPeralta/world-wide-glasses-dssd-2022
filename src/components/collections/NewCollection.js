@@ -2,6 +2,7 @@ import Input from "../UI/Input";
 import {useRef, useState} from "react";
 import {NavLink, useNavigate} from "react-router-dom";
 import {BsXLg} from "react-icons/bs";
+import {API_COLLECTIONS} from "../../helpers/Routes";
 
 const NewCollection = () => {
     const navigate = useNavigate();
@@ -15,7 +16,6 @@ const NewCollection = () => {
     const manufacturingTimeRef = useRef(undefined)
     const modelNameRef = useRef(undefined)
     const modelTypeTimeRef = useRef(undefined)
-    const modelRef = useRef()
 
     const handleCreateCollection = async (e) => {
         e.preventDefault()
@@ -29,8 +29,7 @@ const NewCollection = () => {
         }
 
 
-        const path = "http://localhost:5224/api/Collection"
-        fetch(path, {
+        fetch(API_COLLECTIONS, {
             method: 'POST',
             body: JSON.stringify(collection),
             headers: {

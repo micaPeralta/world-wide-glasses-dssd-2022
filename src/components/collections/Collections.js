@@ -1,7 +1,7 @@
 import {BsPlusLg} from "react-icons/bs";
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
-import httpHandler from "react-http-client";
+import {API_COLLECTIONS} from "../../helpers/Routes";
 
 const Collections = () => {
 
@@ -15,7 +15,7 @@ const Collections = () => {
 
 
     const getCollections = async () => {
-        const path = "http://localhost:5224/api/Collection/getAll"
+        const path = API_COLLECTIONS + "/getAll"
 
         fetch(path)
             .then(response =>  response.clone().json())

@@ -1,13 +1,16 @@
-import {useRef} from "react";
+import {useRef, useState} from "react";
 import Input from "./UI/Input";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "../context/AuthContext";
+import {API_AUTH} from "../helpers/Routes";
+//import Cookies from 'universal-cookie';
 
 const Login = () => {
     const emailRef = useRef("")
     const pwdRef = useRef("")
     const auth = useAuth();
     let navigate = useNavigate();
+    const [wrongCredentials, setWrongCredentials] = useState(false)
 
 
     if (auth?.user) {
@@ -15,12 +18,21 @@ const Login = () => {
     }
 
     const handleLogin = (user, pwd) => {
-        // const path = "";
-        // fetch(path).then(response => {
-        //     console.log(response)
-        auth.login({name: "mika", token: "123"})
-        navigate("home/collections")
-        // })
+        let loginData = { email: user, password: pwd}
+        const path = API_AUTH + "/login";
+        fetch(path,{ method: 'POST', body: JSON.stringify(loginData), headers: { 'Content-Type': 'application/json'}})
+            .then(response => {
+                if (response.status === 401) {
+                    setWrongCredentials(true)
+                    return
+                }
+                return response.clone().json()
+            })
+            .then(data => {
+                console.log(data);
+                 auth.login({name: "mika", token: data.apiToken})
+                 navigate("home/collections")
+            }).catch(response => console.log(response))
     }
 
     const handleSubmit = (event) => {
@@ -45,6 +57,9 @@ const Login = () => {
                                             <div className="text-center">
                                                 <h1 className="h4 text-gray-900 mb-4">Welcome!</h1>
                                             </div>
+                                            {wrongCredentials && <div className="alert alert-danger" role="alert">
+                                                Wrong credentials
+                                            </div>}
                                             <form className="user">
                                                 <div className="form-group">
                                                     <Input ref={emailRef}
