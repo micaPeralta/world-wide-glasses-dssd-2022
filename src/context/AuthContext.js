@@ -1,8 +1,11 @@
 import {createContext, useContext, useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
+import Cookies from 'universal-cookie';
 
 
 const AuthContext = createContext(null)
+
+var globalCookie = new Cookies();
 
 export const  AuthProvider = ({children}) => {
     const [user, setUser] = useState({});
@@ -15,6 +18,10 @@ export const  AuthProvider = ({children}) => {
     }, [])
 
     const login = (user) => {
+        // const cookies = new Cookies();
+        globalCookie.set('session-id', user.sessionId, { path: '/' });
+        globalCookie.set('api-token', user.apiToken, { path: '/' });
+
         setUser(user)
         localStorage.setItem("user", JSON.stringify(user))
     }
@@ -22,6 +29,8 @@ export const  AuthProvider = ({children}) => {
     const logout = () => {
         setUser(null)
         localStorage.clear()
+        globalCookie.remove('api-token', { path: '/' });
+        globalCookie.remove('session-id', { path: '/' });
         navigate("/")
     }
 

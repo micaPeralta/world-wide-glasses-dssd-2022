@@ -3,7 +3,7 @@ import Input from "./UI/Input";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "../context/AuthContext";
 import {API_AUTH} from "../helpers/Routes";
-//import Cookies from 'universal-cookie';
+
 
 const Login = () => {
     const emailRef = useRef("")
@@ -20,8 +20,12 @@ const Login = () => {
     const handleLogin = (user, pwd) => {
         let loginData = { email: user, password: pwd}
         const path = API_AUTH + "/login";
-        fetch(path,{ method: 'POST', body: JSON.stringify(loginData), headers: { 'Content-Type': 'application/json'}})
-            .then(response => {
+        fetch(path,{
+            method: 'POST',
+            body: JSON.stringify(loginData),
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json', Accept: 'application/json'}
+        }).then(response => {
                 if (response.status === 401) {
                     setWrongCredentials(true)
                     return
@@ -30,7 +34,7 @@ const Login = () => {
             })
             .then(data => {
                 console.log(data);
-                 auth.login({name: "mika", token: data.apiToken})
+                 auth.login(data)
                  navigate("home/collections")
             }).catch(response => console.log(response))
     }

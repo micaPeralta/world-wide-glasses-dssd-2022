@@ -32,6 +32,7 @@ const NewCollection = () => {
         fetch(API_COLLECTIONS, {
             method: 'POST',
             body: JSON.stringify(collection),
+            credentials: "include",
             headers: {
                 'Content-Type': 'application/json',
             }
@@ -59,7 +60,7 @@ const NewCollection = () => {
     }
 
     const handleDeleteModel = (name) => {
-        let modelVar = models.filter(m => m.name != name)
+        let modelVar = models.filter(m => m.name !== name)
         setModels(modelVar)
     }
 

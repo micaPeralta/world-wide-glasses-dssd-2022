@@ -17,7 +17,9 @@ const Collections = () => {
     const getCollections = async () => {
         const path = API_COLLECTIONS + "/getAll"
 
-        fetch(path)
+        fetch(path, {
+            credentials: "include"
+        })
             .then(response =>  response.clone().json())
             .then((data) => {
                 console.log(data)
