@@ -2,11 +2,14 @@ import Input from "../UI/Input";
 import {useRef, useState} from "react";
 import {NavLink, useNavigate} from "react-router-dom";
 import {BsXLg} from "react-icons/bs";
-import {API_COLLECTIONS} from "../../helpers/Routes";
+import {API_COLLECTIONS, UPLOAD_IMAGE} from "../../helpers/Routes";
 
 const NewCollection = () => {
     const navigate = useNavigate();
     const [models,setModels] = useState([]);
+    const [filesSelected, setFilesSelected] = useState(
+        []
+    );
 
 
     const nameRef = useRef("")
@@ -22,12 +25,10 @@ const NewCollection = () => {
         let collection = {
             name: nameRef.current.value,
             description: descriptionRef.current.value,
-            images: imagesRef.current.value,
             releaseDate: new Date(releaseDateRef.current.value).toISOString(),
             models: models,
             manufacturingTime: manufacturingTimeRef.current.value
         }
-
 
         fetch(API_COLLECTIONS, {
             method: 'POST',
@@ -36,16 +37,30 @@ const NewCollection = () => {
             headers: {
                 'Content-Type': 'application/json',
             }
-        }).then(response => {
-            console.log(response.ok)
-            if (response.ok){
+        })
+            .then(response => {
+
+                if (!response.ok) {
+                    return
+                }
+                response.clone().json()
+            })
+            .then(collection => {
+                console.log(collection.id)
+                handleUploadFiles(collection.id)
                 navigate("/home/collections")
-            }
-        }).catch((response) => {
-                console.log("ERROR", response)
+            }).catch((response) => {
+            console.log("ERROR", response)
         })
 
     }
+
+    const saveFileSelected= (e) => {
+        //in case you wan to print the file selected
+        // console.log(e.target.files[0]);
+        // console.log(e.target.files);
+        setFilesSelected(e.target.files);
+    };
 
     const handleAddModel = (e) => {
         e.preventDefault()
@@ -63,6 +78,21 @@ const NewCollection = () => {
         let modelVar = models.filter(m => m.name !== name)
         setModels(modelVar)
     }
+
+    const handleUploadFiles = async (collectionId) => {
+        const formData = new FormData();
+
+        for (let i = 0; i < filesSelected.length ; i++) {
+            formData.append("files", filesSelected[i])
+        }
+        formData.append("collectionId", collectionId);
+
+        const res = await fetch(UPLOAD_IMAGE, {
+            method: "POST",
+            body: formData
+
+        }).then((res) => res.json());
+    };
 
     return (
         <>
@@ -161,18 +191,23 @@ const NewCollection = () => {
                     </div>
 
 
-                    {/*<div className="form-group">*/}
-                    {/*    <label htmlFor="images">Collection images:</label>*/}
-                    {/*    <Input ref={imagesRef}*/}
-                    {/*           name={"images"}*/}
-                    {/*           type="file"*/}
-                    {/*           id="images"*/}
-                    {/*           accept="image/*"*/}
-                    {/*           class={"form-control form-control-user"}*/}
-                    {/*           multiple*/}
-                    {/*           required*/}
-                    {/*    />*/}
-                    {/*</div>*/}
+                    {/*<form onSubmit={e => e.preventDefault()}>*/}
+                        <div className="form-group">
+                            <label htmlFor="images">Collection files:</label>
+                            <Input ref={imagesRef}
+                                   name={"images"}
+                                   type="file"
+                                   id="images"
+                                   class={"form-control form-control-user"}
+                                   multiple
+                                   required
+                                   onChange={saveFileSelected}
+                            />
+                            {/*<input type="button" onClick={handleUploadFiles}/>*/}
+                        </div>
+
+                    {/*</form>*/}
+
 
                     <div className="d-grid gap-2">
                     <button className={"btn btn-secondary btn- "} type={"submit"}>
