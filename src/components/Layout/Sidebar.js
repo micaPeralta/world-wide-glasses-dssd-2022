@@ -5,9 +5,22 @@ import {SidebarData} from "../../helpers/SidebarData";
 import {NavLink} from "react-router-dom";
 import {useAuth} from "../../context/AuthContext";
 import {BsBoxArrowInLeft, BsEyeglasses} from "react-icons/bs";
+import {API_AUTH} from "../../helpers/Routes";
 
 function Sidebar() {
     const auth = useAuth();
+
+    const handleLogout = () => {
+        const path = API_AUTH + "/logout";
+        fetch(path, {
+            method: 'POST',
+            credentials: 'include',
+            // headers: { 'Content-Type': 'application/json', Accept: 'application/json'}
+        }).then(response => {
+            console.log(response);
+            auth.logout()
+        }).catch(response => console.log(response))
+    }
 
     return (
         <ul className="navbar-nav bg-gradient-info sidebar sidebar-dark accordion" id="accordionSidebar">
@@ -36,7 +49,7 @@ function Sidebar() {
 
 
             <li className="nav-item active">
-                <a className="nav-link" onClick={auth.logout}>
+                <a className="nav-link" onClick={handleLogout}>
                     <BsBoxArrowInLeft size={23}/>
                     <span style={{marginLeft: 9}} >Logout</span>
                 </a>
