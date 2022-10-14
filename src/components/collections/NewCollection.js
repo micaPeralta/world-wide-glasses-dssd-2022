@@ -43,7 +43,7 @@ const NewCollection = () => {
                 if (!response.ok) {
                     return
                 }
-                response.clone().json()
+                return response.clone().json()
             })
             .then(collection => {
                 console.log(collection.id)
