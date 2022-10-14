@@ -85,7 +85,7 @@ const NewCollection = () => {
         for (let i = 0; i < filesSelected.length ; i++) {
             formData.append("files", filesSelected[i])
         }
-        formData.append("collectionId", collectionId);
+        formData.append("collectionId", Number(collectionId));
 
         const res = await fetch(UPLOAD_IMAGE, {
             method: "POST",
@@ -148,7 +148,6 @@ const NewCollection = () => {
                                        label={"modelName"}
                                        id="modelName"
                                        class={"form-control form-control-user"}
-                                       required
                                 />
                             </div>
                             <div className="form-group">
