@@ -10,7 +10,7 @@ const Login = () => {
     const pwdRef = useRef("")
     const auth = useAuth();
     let navigate = useNavigate();
-    const [wrongCredentials, setWrongCredentials] = useState(false)
+    const [error, setError] = useState(undefined)
 
 
     if (auth?.user) {
@@ -23,13 +23,16 @@ const Login = () => {
         AuthService.login(loginData)
             .then(response => {
                 if (response.status === 401) {
-                    setWrongCredentials(true)
+                    setError("Wrong credentials")
+                    return
+                }
+                if (response.status === 500) {
+                    setError("Unexpected error")
                     return
                 }
                 return response.clone().json()
             })
             .then(data => {
-                console.log(data);
                 auth.login(data)
                 navigate("home/collections")
             }).catch(response => console.log(response))
@@ -57,8 +60,8 @@ const Login = () => {
                                             <div className="text-center">
                                                 <h1 className="h4 text-gray-900 mb-4">Welcome!</h1>
                                             </div>
-                                            {wrongCredentials && <div className="alert alert-danger" role="alert">
-                                                Wrong credentials
+                                            {error && <div className="alert alert-danger" role="alert">
+                                                {error}
                                             </div>}
                                             <form className="user">
                                                 <div className="form-group">

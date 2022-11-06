@@ -1,10 +1,11 @@
 import {BsPlusLg} from "react-icons/bs";
-import AddMaterialModal from "../Materials/AddMaterialModal";
+import AddMaterialForm from "../Materials/AddMaterialForm";
 import {useState} from "react";
 
 interface Props {
-    buttonAction: Function,
-    buttonType: String
+    buttonAction?: Function,
+    buttonType: String,
+    onActionModal?: Function
 }
 
 const TableLayout = (props: Props) => {
@@ -39,7 +40,7 @@ const TableLayout = (props: Props) => {
             </div>
         </div>
 
-        {modalEnabled() && openModal && <AddMaterialModal onClose={toggleModal}/>}
+        {modalEnabled() && openModal && <AddMaterialForm onClose={toggleModal} onAdd={props.onActionModal}/>}
 
     </>
 }

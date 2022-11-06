@@ -1,8 +1,9 @@
 import {GenericService} from "./GenericService";
+import {API_ROOT} from "../helpers/Routes";
 
-export class CollectionsService extends GenericService{
+export class CollectionsService extends GenericService {
 
-    static localPath =  "/Collection"
+    static localPath = API_ROOT + "/Collection"
 
     static getCollections = () => {
         return this.getJson(this.localPath + "/getAll");

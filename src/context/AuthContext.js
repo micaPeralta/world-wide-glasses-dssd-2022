@@ -1,27 +1,26 @@
 import {createContext, useContext, useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
-import Cookies from 'universal-cookie';
+import {CookieUtils} from "../helpers/CookieUtils";
 
 
 const AuthContext = createContext(null)
 
-var globalCookie = new Cookies();
 
-export const  AuthProvider = ({children}) => {
+export const AuthProvider = ({children}) => {
     const [user, setUser] = useState({});
     let navigate = useNavigate();
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem("user"))
         if (user) setUser(user)
-        else  setUser(null)
+        else setUser(null)
     }, [])
 
     const login = (user) => {
-        // const cookies = new Cookies();
-        globalCookie.set('session-id', user.sessionId, { path: '/' });
-        globalCookie.set('api-token', user.apiToken, { path: '/' });
-        globalCookie.set('group-id', user.groupId, { path: '/' });
+        CookieUtils.set(CookieUtils.B_SESSION_ID, user.sessionId)
+        CookieUtils.set(CookieUtils.B_TOKEN, user.apiToken)
+        CookieUtils.set(CookieUtils.B_GROUP_ID, user.groupId)
+        CookieUtils.set(CookieUtils.P_TOKEN, user.providerToken)
 
         setUser(user)
         localStorage.setItem("user", JSON.stringify(user))
@@ -30,9 +29,10 @@ export const  AuthProvider = ({children}) => {
     const logout = () => {
         setUser(null)
         localStorage.clear()
-        globalCookie.remove('api-token', { path: '/' });
-        globalCookie.remove('session-id', { path: '/' });
-        globalCookie.remove('group-id', { path: '/' });
+        CookieUtils.remove(CookieUtils.B_SESSION_ID)
+        CookieUtils.remove(CookieUtils.B_TOKEN)
+        CookieUtils.remove(CookieUtils.B_GROUP_ID)
+        CookieUtils.remove(CookieUtils.P_TOKEN)
         navigate("/")
     }
 
