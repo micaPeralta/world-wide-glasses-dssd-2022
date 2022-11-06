@@ -5,21 +5,15 @@ import {SidebarData} from "../../helpers/SidebarData";
 import {NavLink} from "react-router-dom";
 import {useAuth} from "../../context/AuthContext";
 import {BsBoxArrowInLeft, BsEyeglasses} from "react-icons/bs";
-import {API_AUTH} from "../../helpers/Routes";
+import {AuthService} from "../../services/LoginService";
 
 function Sidebar() {
     const auth = useAuth();
 
     const handleLogout = () => {
-        const path = API_AUTH + "/logout";
-        fetch(path, {
-            method: 'POST',
-            credentials: 'include',
-            // headers: { 'Content-Type': 'application/json', Accept: 'application/json'}
-        }).then(response => {
-            console.log(response);
-            auth.logout()
-        }).catch(response => console.log(response))
+        AuthService.logout()
+            .then(response => auth.logout())
+            .catch(response => console.log(response))
     }
 
     return (
@@ -40,7 +34,7 @@ function Sidebar() {
             {/* Nav Item - Dashboard */}
             {SidebarData.map((val, key) =>
                 <li className="nav-item active" key={key}>
-                    <NavLink id={"title"}  className="nav-link" to={val.link} >
+                    <NavLink id={"title"} className="nav-link" to={val.link}>
                         {val.icon}
                         <span style={{marginLeft: 9}}>{val.title}</span>
                     </NavLink>
@@ -51,7 +45,7 @@ function Sidebar() {
             <li className="nav-item active">
                 <a className="nav-link" onClick={handleLogout}>
                     <BsBoxArrowInLeft size={23}/>
-                    <span style={{marginLeft: 9}} >Logout</span>
+                    <span style={{marginLeft: 9}}>Logout</span>
                 </a>
             </li>
 

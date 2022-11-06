@@ -9,7 +9,7 @@ import Home from "../Home";
 import Collections from "../collections/Collections";
 import NotFound from "../NotFound";
 import NewCollection from "../collections/NewCollection";
-import App from "../../App";
+import Materials from "../Materials/Materials";
 
 
 const Root = () => {
@@ -26,6 +26,7 @@ const Root = () => {
                 <Route path="home" element={<RequireOauth><Home/> </RequireOauth>}>
                     <Route path="collections" element={<RequireOauth> <Collections/> </RequireOauth>}/>
                     <Route path="new-collection" element={<RequireOauth> <NewCollection/> </RequireOauth>}/>
+                    <Route path="materials" element={<RequireOauth> <Materials/> </RequireOauth>}/>
                 </Route>
                 <Route path="*" element={<NotFound/>}/>
             </Routes>
@@ -62,7 +63,7 @@ const Root = () => {
                         <div className="modal-footer">
                             <button className="btn btn-secondary" type="button" data-dismiss="modal">Cancel
                             </button>
-                            <a className="btn btn-primary" href="login.html">Logout</a>
+                            <a className="btn btn-primary" href="">Logout</a>
                         </div>
                     </div>
                 </div>

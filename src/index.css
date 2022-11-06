@@ -15,3 +15,7 @@ code {
 .btn a {
   color: white;
 }
+
+.pointer {
+  cursor: pointer;
+}

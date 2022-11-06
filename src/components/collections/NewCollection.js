@@ -2,15 +2,15 @@ import Input from "../UI/Input";
 import {useRef, useState} from "react";
 import {NavLink, useNavigate} from "react-router-dom";
 import {BsXLg} from "react-icons/bs";
-import {API_COLLECTIONS, UPLOAD_IMAGE} from "../../helpers/Routes";
+import {UPLOAD_IMAGE} from "../../helpers/Routes";
+import {CollectionsService} from "../../services/CollectionsService";
 
 const NewCollection = () => {
     const navigate = useNavigate();
-    const [models,setModels] = useState([]);
+    const [models, setModels] = useState([]);
     const [filesSelected, setFilesSelected] = useState(
         []
     );
-
 
     const nameRef = useRef("")
     const descriptionRef = useRef("")
@@ -30,32 +30,21 @@ const NewCollection = () => {
             manufacturingTime: manufacturingTimeRef.current.value
         }
 
-        fetch(API_COLLECTIONS, {
-            method: 'POST',
-            body: JSON.stringify(collection),
-            credentials: "include",
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        })
+        CollectionsService.createCollection(collection)
             .then(response => {
-
-                if (!response.ok) {
-                    return
-                }
+                if (!response.ok) return
                 return response.clone().json()
-            })
-            .then(collection => {
-                console.log(collection.id)
-                handleUploadFiles(collection.id)
-                navigate("/home/collections")
-            }).catch((response) => {
+            }).then(collection => {
+            console.log(collection.id)
+            handleUploadFiles(collection.id)
+            navigate("/home/collections")
+        }).catch((response) => {
             console.log("ERROR", response)
         })
 
     }
 
-    const saveFileSelected= (e) => {
+    const saveFileSelected = (e) => {
         //in case you wan to print the file selected
         // console.log(e.target.files[0]);
         // console.log(e.target.files);
@@ -71,7 +60,7 @@ const NewCollection = () => {
         }
 
         modelNameRef.current.value = "";
-        setModels([...models,model])
+        setModels([...models, model])
     }
 
     const handleDeleteModel = (name) => {
@@ -82,7 +71,7 @@ const NewCollection = () => {
     const handleUploadFiles = async (collectionId) => {
         const formData = new FormData();
 
-        for (let i = 0; i < filesSelected.length ; i++) {
+        for (let i = 0; i < filesSelected.length; i++) {
             formData.append("files", filesSelected[i])
         }
         formData.append("collectionId", Number(collectionId));
@@ -90,13 +79,12 @@ const NewCollection = () => {
         const res = await fetch(UPLOAD_IMAGE, {
             method: "POST",
             body: formData
-
         }).then((res) => res.json());
     };
 
     return (
         <>
-            <nav  aria-label="breadcrumb">
+            <nav aria-label="breadcrumb">
                 <ol className="breadcrumb">
                     <li className="breadcrumb-item"><NavLink to={"/home/collections"}> Collections </NavLink>
                     </li>
@@ -113,17 +101,18 @@ const NewCollection = () => {
                         <label htmlFor="releaseDate"> Name</label>
 
                         <Input ref={nameRef}
-                           name={"name"}
-                           type="text"
-                           label={"Name"}
-                           id="name"
-                           class={"form-control form-control-user"}
-                           required
-                    />
+                               name={"name"}
+                               type="text"
+                               label={"Name"}
+                               id="name"
+                               class={"form-control form-control-user"}
+                               required
+                        />
                     </div>
                     <div className="form-group">
                         <label htmlFor="releaseDate"> Description</label>
-                        <textarea ref={descriptionRef} className="form-control" id="description" rows="3" required></textarea>
+                        <textarea ref={descriptionRef} className="form-control" id="description" rows="3"
+                                  required></textarea>
                     </div>
 
 
@@ -133,12 +122,12 @@ const NewCollection = () => {
                         <div className="card-body">
                             {models.length > 0 &&
                                 <div className="alert alert-warning" role="alert">
-                                {models.map(m =>{
-                                    return <span className="badge bg-secondary m-1 p-1">
-                                        {m.name }({m.modelType})
+                                    {models.map(m => {
+                                        return <span className="badge bg-secondary m-1 p-1">
+                                        {m.name}({m.modelType})
                                         <BsXLg onClick={() => handleDeleteModel(m.name)}/>
                                     </span>
-                                })}
+                                    })}
                                 </div>}
                             <div className="form-group">
                                 <label htmlFor="manufacturingTime"> Model Name </label>
@@ -152,9 +141,10 @@ const NewCollection = () => {
                             </div>
                             <div className="form-group">
                                 <label htmlFor="model">Model Type</label>
-                                <select className="form-select" id="model" ref={modelTypeTimeRef} defaultValue={"Reading lens"} >
+                                <select className="form-select" id="model" ref={modelTypeTimeRef}
+                                        defaultValue={"Reading lens"}>
                                     <option value="sunglasses">Sunglasses</option>
-                                    <option value="Reading lens">Reading lens </option>
+                                    <option value="Reading lens">Reading lens</option>
                                 </select>
                             </div>
 
@@ -191,27 +181,27 @@ const NewCollection = () => {
 
 
                     {/*<form onSubmit={e => e.preventDefault()}>*/}
-                        <div className="form-group">
-                            <label htmlFor="images">Collection files:</label>
-                            <Input ref={imagesRef}
-                                   name={"images"}
-                                   type="file"
-                                   id="images"
-                                   class={"form-control form-control-user"}
-                                   multiple
-                                   required
-                                   onChange={saveFileSelected}
-                            />
-                            {/*<input type="button" onClick={handleUploadFiles}/>*/}
-                        </div>
+                    <div className="form-group">
+                        <label htmlFor="images">Collection files:</label>
+                        <Input ref={imagesRef}
+                               name={"images"}
+                               type="file"
+                               id="images"
+                               class={"form-control form-control-user"}
+                               multiple
+                               required
+                               onChange={saveFileSelected}
+                        />
+                        {/*<input type="button" onClick={handleUploadFiles}/>*/}
+                    </div>
 
                     {/*</form>*/}
 
 
                     <div className="d-grid gap-2">
-                    <button className={"btn btn-secondary btn- "} type={"submit"}>
-                        Submit
-                    </button>
+                        <button className={"btn btn-secondary btn- "} type={"submit"}>
+                            Submit
+                        </button>
                     </div>
                 </form>
 

@@ -2,7 +2,7 @@ import {useRef, useState} from "react";
 import Input from "./UI/Input";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "../context/AuthContext";
-import {API_AUTH} from "../helpers/Routes";
+import {AuthService} from "../services/LoginService";
 
 
 const Login = () => {
@@ -18,14 +18,10 @@ const Login = () => {
     }
 
     const handleLogin = (user, pwd) => {
-        let loginData = { email: user, password: pwd}
-        const path = API_AUTH + "/login";
-        fetch(path,{
-            method: 'POST',
-            body: JSON.stringify(loginData),
-            credentials: 'include',
-            headers: { 'Content-Type': 'application/json', Accept: 'application/json'}
-        }).then(response => {
+        let loginData = {email: user, password: pwd}
+
+        AuthService.login(loginData)
+            .then(response => {
                 if (response.status === 401) {
                     setWrongCredentials(true)
                     return
@@ -34,12 +30,12 @@ const Login = () => {
             })
             .then(data => {
                 console.log(data);
-                 auth.login(data)
-                 navigate("home/collections")
+                auth.login(data)
+                navigate("home/collections")
             }).catch(response => console.log(response))
     }
 
-    const handleSubmit = (event) => {
+    const handleSubmit = () => {
         console.log(emailRef.current.value)
         console.log(pwdRef.current.value)
         handleLogin(emailRef.current.value, pwdRef.current.value)
@@ -47,7 +43,7 @@ const Login = () => {
 
     return (
         <>
-        <div className="container">
+            <div className="container">
                 <div className="row justify-content-center">
                     <div className="col-xl-10 col-lg-12 col-md-9">
 
