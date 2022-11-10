@@ -76,7 +76,7 @@ const AddMaterialForm = (props: Props) => {
             <div className="form-group mx-sm-3 mb-2">
                 <button className={"btn btn-secondary btn-icon-split float-right"} type={"submit"}>
                     <span className="icon text-white-50"><BsPlusLg/></span>
-                    <span className="text"> Add material</span>
+                    {/*<span className="text"> Add material</span>*/}
                 </button>
             </div>
         </form>

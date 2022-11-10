@@ -5,13 +5,13 @@ export interface res {
 
 export class GenericService {
 
-    static init: {
+    static init = {
         credentials: "include"
     }
 
     static get = (path: string, headers?) => {
         return fetch(path, {
-            ...this.init, headers: {...headers}
+            ...GenericService.init, headers: {...headers}
         })
     }
 
@@ -22,7 +22,7 @@ export class GenericService {
     static post = (path: string, data) => {
         return (
             fetch(path, {
-                ...this.init,
+                ...GenericService.init,
                 method: "POST",
                 body: JSON.stringify(data || {}),
                 headers: {
